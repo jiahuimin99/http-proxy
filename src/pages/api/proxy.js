@@ -21,19 +21,6 @@ export default async function handler(req, res) {
       });
     }
 
-    // 如果是/info路径，返回代理服务信息
-    if (url === '/api/proxy/info' || url.startsWith('/api/proxy/info?')) {
-      return res.status(200).json({ 
-        service: "EdgeOne Pages Proxy Service",
-        version: "1.0.0",
-        endpoints: [
-          "/api/proxy - 根路径",
-          "/api/proxy/info - 服务信息",
-          "/api/proxy/* - 代理转发到外部API"
-        ],
-        timestamp: new Date().toISOString()
-      });
-    }
 
     // 检查是否是有效的API路径，避免转发到不存在的目标
     const pathWithoutQuery = url.split('?')[0];
