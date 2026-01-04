@@ -22,12 +22,13 @@ app.get("/", (req, res) => {
 
 
 // 代理接口，拦截所有 /api/proxy 和子路由请求
-app.all("/api/proxy/*", async (req, res) => {
+app.all("/api/proxy/:path*", async (req, res) => {
   try {
     const { method, url, headers } = req;
 
-    // 处理代理路径，去除 "/api/proxy" 前缀
-    const pathWithoutPrefix = url.replace(/^\/api\/proxy/, '') || '/';
+    // 处理代理路径，获取路径参数并构建完整路径
+    const pathParam = req.params.path || '';
+    const pathWithoutPrefix = pathParam ? '/' + pathParam : '/';
 
     // 根路径 /api/proxy 返回自定义信息
     if (pathWithoutPrefix === '/' || pathWithoutPrefix === '') {
@@ -65,7 +66,8 @@ app.all("/api/proxy/*", async (req, res) => {
 
 
     // 目标 URL (包含去除代理前缀后的路径和查询字符串)
-    const targetUrl = baseTarget + pathWithoutPrefix;
+    const queryString = req.url.includes('?') ? req.url.substring(req.url.indexOf('?')) : '';
+    const targetUrl = baseTarget + pathWithoutPrefix + queryString;
 
     if (method === 'GET') {
       // 代理 GET 请求
