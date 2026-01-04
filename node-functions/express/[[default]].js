@@ -7,7 +7,7 @@ import { Buffer } from 'buffer';
 const app = express();
 
 const apiKey = "app-iED3oMZNrWiKtXu5T5ASim2c";
-const baseTarget = 'http://api.dify.woa.com';
+const baseTarget = 'http://api.dify.woa.com/v1/info';
 
 // 日志中间件
 app.use((req, res, next) => {
@@ -16,9 +16,17 @@ app.use((req, res, next) => {
 });
 
 // 根路由
-app.get("/", (req, res) => {
-  res.json({ message: "Hello from Express on Node Functions!" });
+app.get("/", async (req, res) => {
+        const fetchResponse = await fetch(targetUrl, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          // 如果需透传用户请求头，也可以在这里添加
+        }
+      });
+  res.json({ message: "Hello from Express on Node Functions!" + fetchResponse});
 });
+
 
 
 // 代理接口，拦截所有 /api/proxy 和子路由请求

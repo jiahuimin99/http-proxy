@@ -38,7 +38,7 @@ export default async function handler(req, res) {
     }
 
     // 固定转发的域名（结尾不要带 / ）
-    const baseTarget = 'http://api.dify.woa.com';
+    const baseTarget = 'http://api.dify.woa.com/v1';
 
     // 拼接路径和查询参数，形成完整目标URL
     const target = baseTarget + url; // url 包含路径和查询字符串
