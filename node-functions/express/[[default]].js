@@ -36,22 +36,22 @@ app.all("/api/proxy/*", async (req, res) => {
       });
     }
 
-    // /info 路径返回代理服务信息
-    if (pathWithoutPrefix === '/infos' || pathWithoutPrefix.startsWith('/info?')) {
+    // /infos 路径返回代理服务信息
+    if (pathWithoutPrefix === '/infos' || pathWithoutPrefix.startsWith('/infos?')) {
       return res.status(200).json({ 
         service: "Express Proxy Service",
         version: "1.0.0",
         endpoints: [
           "/api/proxy - 根路径",
-          "/api/proxy/info - 服务信息",
+          "/api/proxy/infos - 服务信息",
           "/api/proxy/* - 代理转发到外部API"
         ],
         timestamp: new Date().toISOString()
       });
     }
 
-    // 无效路径处理
-    if (!pathWithoutPrefix || pathWithoutPrefix === '/') {
+    // 处理其他无效路径（非代理路径）
+    if (pathWithoutPrefix && pathWithoutPrefix !== '/' && pathWithoutPrefix !== '/infos' && !pathWithoutPrefix.startsWith('/infos?')) {
       return res.status(404).json({ 
         error: "路径不存在",
         message: `请求的路径 ${url} 不存在于代理服务中`,
@@ -61,6 +61,8 @@ app.all("/api/proxy/*", async (req, res) => {
         ]
       });
     }
+
+
 
     // 目标 URL (包含去除代理前缀后的路径和查询字符串)
     const targetUrl = baseTarget + pathWithoutPrefix;

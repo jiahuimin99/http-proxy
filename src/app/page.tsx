@@ -22,6 +22,58 @@ export default function Home() {
     }
   }
 
+  const handleApiCallWithSlash = async () => {
+    setIsLoading(true)
+    try {
+      const response = await fetch("/api/proxy/");
+      const data = await response.json();
+      setApiResult(data.message);
+    } catch (error) {
+      setApiResult("Error: Failed to call /api/proxy/ API")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleExpressCall = async () => {
+    setIsLoading(true)
+    try {
+      const response = await fetch("/express");
+      const data = await response.json();
+      setApiResult(data.message);
+    } catch (error) {
+      setApiResult("Error: Failed to call /express API")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleExpressTestCall = async () => {
+    setIsLoading(true)
+    try {
+      const response = await fetch("/express/test");
+      const data = await response.json();
+      setApiResult(`Express Test: ${data.status}`);
+    } catch (error) {
+      setApiResult("Error: Failed to call /express/test API")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleApiCallInfos = async () => {
+    setIsLoading(true)
+    try {
+      const response = await fetch("/api/proxy/infos");
+      const data = await response.json();
+      setApiResult(`Infos: ${JSON.stringify(data)}`);
+    } catch (error) {
+      setApiResult("Error: Failed to call /api/proxy/infos API")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Header */}
@@ -128,19 +180,81 @@ export default app;`}
           {/* API Call Section */}
           <Card className="bg-gray-900 border-gray-700">
             <CardContent className="pt-6">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <Button 
-                  onClick={handleApiCall}
-                  disabled={isLoading}
-                  className="bg-[#1c66e5] hover:bg-[#1c66e5]/90 text-white cursor-pointer"
-                >
-                  {isLoading ? (
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                  ) : (
-                    <Play className="w-4 h-4 mr-2" />
-                  )}
-                  Execute API Call
-                </Button>
+              <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Button 
+                    onClick={handleExpressCall}
+                    disabled={isLoading}
+                    className="bg-green-600 hover:bg-green-600/90 text-white cursor-pointer"
+                  >
+                    {isLoading ? (
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                    ) : (
+                      <Play className="w-4 h-4 mr-2" />
+                    )}
+                    Test /express
+                  </Button>
+                  <Button 
+                    onClick={handleExpressTestCall}
+                    disabled={isLoading}
+                    className="bg-blue-600 hover:bg-blue-600/90 text-white cursor-pointer"
+                  >
+                    {isLoading ? (
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                    ) : (
+                      <Play className="w-4 h-4 mr-2" />
+                    )}
+                    Test /express/test
+                  </Button>
+                  <Button 
+                    onClick={handleApiCall}
+                    disabled={isLoading}
+                    className="bg-[#1c66e5] hover:bg-[#1c66e5]/90 text-white cursor-pointer"
+                  >
+                    {isLoading ? (
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                    ) : (
+                      <Play className="w-4 h-4 mr-2" />
+                    )}
+                    Test /api/proxy
+                  </Button>
+                  <Button 
+                    onClick={handleApiCallWithSlash}
+                    disabled={isLoading}
+                    className="bg-purple-600 hover:bg-purple-600/90 text-white cursor-pointer"
+                  >
+                    {isLoading ? (
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                    ) : (
+                      <Play className="w-4 h-4 mr-2" />
+                    )}
+                    Test /api/proxy/
+                  </Button>
+                  <Button 
+                    onClick={handleApiCallWithSlash}
+                    disabled={isLoading}
+                    className="bg-[#1c66e5] hover:bg-[#1c66e5]/90 text-white cursor-pointer"
+                  >
+                    {isLoading ? (
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                    ) : (
+                      <Play className="w-4 h-4 mr-2" />
+                    )}
+                    Test /api/proxy/
+                  </Button>
+                  <Button 
+                    onClick={handleApiCallInfos}
+                    disabled={isLoading}
+                    className="bg-orange-600 hover:bg-orange-600/90 text-white cursor-pointer"
+                  >
+                    {isLoading ? (
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                    ) : (
+                      <Play className="w-4 h-4 mr-2" />
+                    )}
+                    Test /api/proxy/infos
+                  </Button>
+                </div>
                 {apiResult && (
                   <div className="text-left">
                     <p className="text-sm text-gray-400 mb-2">API Call Result:</p>
