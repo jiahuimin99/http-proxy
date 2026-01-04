@@ -21,7 +21,6 @@ export default async function handler(req, res) {
       });
     }
 
-
     // 检查是否是有效的API路径，避免转发到不存在的目标
     const pathWithoutQuery = url.split('?')[0];
     const apiPath = pathWithoutQuery.replace('/api/proxy', '');
