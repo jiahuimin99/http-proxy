@@ -21,8 +21,8 @@ app.get("/", (req, res) => {
 });
 
 
-// // 代理接口，拦截所有 /api/proxy 和子路由请求
-// app.all("/api/proxy/:path*", async (req, res) => {
+// 代理接口，拦截所有 /api/proxy 和子路由请求
+app.all("/api/proxy/:path*", async (req, res) => {
 //   try {
 //     const { method, url, headers } = req;
 

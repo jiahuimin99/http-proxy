@@ -22,18 +22,6 @@ export default function Home() {
     }
   }
 
-  const handleApiCallWithSlash = async () => {
-    setIsLoading(true)
-    try {
-      const response = await fetch("/api/proxy/");
-      const data = await response.json();
-      setApiResult(data.message);
-    } catch (error) {
-      setApiResult("Error: Failed to call /api/proxy/ API")
-    } finally {
-      setIsLoading(false)
-    }
-  }
 
   const handleExpressCall = async () => {
     setIsLoading(true)
