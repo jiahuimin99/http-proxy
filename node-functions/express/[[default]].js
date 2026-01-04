@@ -197,8 +197,9 @@ function readRawBody(req) {
 }
 
 
-// 启动服务
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Express server running on port ${port}`);
-});
+// // 启动服务
+// const port = process.env.PORT || 3000;
+// app.listen(port, () => {
+//   console.log(`Express server running on port ${port}`);
+// });
+export default app;
