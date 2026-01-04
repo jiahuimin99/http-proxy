@@ -12,7 +12,7 @@ export default function Home() {
   const handleApiCall = async () => {
     setIsLoading(true)
     try {
-      const response = await fetch("/express");
+      const response = await fetch("/api/proxy");
       const data = await response.json();
       setApiResult(data.message);
     } catch (error) {

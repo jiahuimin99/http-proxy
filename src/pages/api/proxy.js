@@ -13,6 +13,43 @@ export default async function handler(req, res) {
   try {
     const { method, url, headers } = req;
 
+    // 如果是根路径，返回自定义响应
+    if (url === '/api/proxy' || url === '/api/proxy/') {
+      return res.status(200).json({ 
+        message: "Hello from Proxy API on EdgeOne Pages!" 
+      });
+    }
+
+    // 如果是/info路径，返回代理服务信息
+    if (url === '/api/proxy/info' || url.startsWith('/api/proxy/info?')) {
+      return res.status(200).json({ 
+        service: "EdgeOne Pages Proxy Service",
+        version: "1.0.0",
+        endpoints: [
+          "/api/proxy - 根路径",
+          "/api/proxy/info - 服务信息",
+          "/api/proxy/* - 代理转发到外部API"
+        ],
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    // 检查是否是有效的API路径，避免转发到不存在的目标
+    const pathWithoutQuery = url.split('?')[0];
+    const apiPath = pathWithoutQuery.replace('/api/proxy', '');
+    
+    // 如果路径为空或只有斜杠，说明是无效路径
+    if (!apiPath || apiPath === '/' || apiPath === '') {
+      return res.status(404).json({ 
+        error: "路径不存在",
+        message: `请求的路径 ${url} 不存在于代理服务中`,
+        available_paths: [
+          "/api/proxy",
+          "/api/proxy/info"
+        ]
+      });
+    }
+
     // 固定转发的域名（结尾不要带 / ）
     const baseTarget = 'http://api.dify.woa.com';
 
