@@ -12,11 +12,12 @@ export const config = {
 export default async function handler(req, res) {
   try {
     const { method, url, headers } = req;
+    console.log("url=",url);
 
     // 如果是根路径，返回自定义响应
     if (url === '/api/proxy' || url === '/api/proxy/') {
       return res.status(200).json({ 
-        message: "Hello from Proxy API on EdgeOne Pages!" 
+        message: "Hello from Proxy API on EdgeOne Pages 1111111111!" 
       });
     }
 

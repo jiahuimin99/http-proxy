@@ -231,18 +231,6 @@ export default app;`}
                     Test /api/proxy/
                   </Button>
                   <Button 
-                    onClick={handleApiCallWithSlash}
-                    disabled={isLoading}
-                    className="bg-[#1c66e5] hover:bg-[#1c66e5]/90 text-white cursor-pointer"
-                  >
-                    {isLoading ? (
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                    ) : (
-                      <Play className="w-4 h-4 mr-2" />
-                    )}
-                    Test /api/proxy/
-                  </Button>
-                  <Button 
                     onClick={handleApiCallInfos}
                     disabled={isLoading}
                     className="bg-orange-600 hover:bg-orange-600/90 text-white cursor-pointer"

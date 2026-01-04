@@ -51,17 +51,7 @@ app.all("/api/proxy/:path*", async (req, res) => {
       });
     }
 
-    // 处理其他无效路径（非代理路径）
-    if (pathWithoutPrefix && pathWithoutPrefix !== '/' && pathWithoutPrefix !== '/infos' && !pathWithoutPrefix.startsWith('/infos?')) {
-      return res.status(404).json({ 
-        error: "路径不存在",
-        message: `请求的路径 ${url} 不存在于代理服务中`,
-        available_paths: [
-          "/api/proxy",
-          "/api/proxy/infos"
-        ]
-      });
-    }
+
 
 
 
