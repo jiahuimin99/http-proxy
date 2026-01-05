@@ -29,8 +29,9 @@ export default async function handler(req, res) {
           // 需要的话可携带客户端请求其他头
         },
       });
-      const data = await fetchResponse.json();
-      return res.status(200).json(data);
+      return res.status(200).json({
+        message: fetchResponse
+      });
     }
 
     // 检查是否是有效的API路径，避免转发到不存在的目标
