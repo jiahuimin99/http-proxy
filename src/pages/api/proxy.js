@@ -13,12 +13,24 @@ export default async function handler(req, res) {
   try {
     const { method, url, headers } = req;
     console.log("url=",url);
-
+    const baseTarget1 = 'http://api.dify.woa.com/v1/info';
+    const apiKey = "app-iED3oMZNrWiKtXu5T5ASim2c";
     // 如果是根路径，返回自定义响应
-    if (url === '/api/proxy' || url === '/api/proxy/') {
+    if (url === '/api/proxy1' || url === '/api/proxy1/') {
       return res.status(200).json({ 
         message: "Hello from Proxy API on EdgeOne Pages 1111111111!" 
       });
+    }
+    if (url === '/api/proxy') {
+      const fetchResponse = await fetch(baseTarget1, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          // 需要的话可携带客户端请求其他头
+        },
+      });
+      const data = await fetchResponse.json();
+      return res.status(200).json(data);
     }
 
     // 检查是否是有效的API路径，避免转发到不存在的目标
@@ -43,7 +55,6 @@ export default async function handler(req, res) {
     // 拼接路径和查询参数，形成完整目标URL
     const target = baseTarget + url; // url 包含路径和查询字符串
 
-    const apiKey = "app-iED3oMZNrWiKtXu5T5ASim2c";
 
     if (method === 'GET') {
       // 直接转发 GET 请求
