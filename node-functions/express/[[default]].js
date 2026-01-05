@@ -16,6 +16,9 @@ app.use((req, res, next) => {
 });
 
 // 根路由
+app.get("/", async (req, res) => {
+  res.json({ message: "Hello from Express on Node Functions!"});
+});
 app.get("/info", async (req, res) => {
   const target = baseTarget + 'info';
         const fetchResponse = await fetch(baseTarget, {
@@ -40,6 +43,7 @@ app.post("/upload", async (req, res) => {
   });
   res.json({ message: "Hello from Express on Node Functions!" + fetchResponse});
 });
+
 
 
 
