@@ -7,7 +7,7 @@ import { Buffer } from 'buffer';
 const app = express();
 
 const apiKey = "app-iED3oMZNrWiKtXu5T5ASim2c";
-const baseTarget = 'http://api.dify.woa.com/v1/info';
+const baseTarget = 'http://api.dify.woa.com/v1/';
 
 // 日志中间件
 app.use((req, res, next) => {
@@ -16,14 +16,28 @@ app.use((req, res, next) => {
 });
 
 // 根路由
-app.get("/", async (req, res) => {
-        const fetchResponse = await fetch(targetUrl, {
+app.get("/info", async (req, res) => {
+  const target = baseTarget + 'info';
+        const fetchResponse = await fetch(baseTarget, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${apiKey}`,
           // 如果需透传用户请求头，也可以在这里添加
         }
       });
+  res.json({ message: "Hello from Express on Node Functions!" + fetchResponse});
+});
+// 根路由
+app.post("/upload", async (req, res) => {
+  const target = baseTarget + 'upload';
+  res.json({ message: "Hello from Express on Node Functions!" + target});
+  const fetchResponse = await fetch(target, {
+  method: 'POST',
+  headers: {
+    Authorization: `Bearer ${apiKey}`,
+    // 如果需透传用户请求头，也可以在这里添加
+    }
+  });
   res.json({ message: "Hello from Express on Node Functions!" + fetchResponse});
 });
 
