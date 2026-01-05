@@ -28,20 +28,72 @@ app.get("/info", async (req, res) => {
           // 如果需透传用户请求头，也可以在这里添加
         }
       });
-  res.json({ message: "Hello from Express on Node Functions!" + fetchResponse});
+    const responseText = await fetchResponse.text();
+  res.json({ message: "Hello from Express on Node Functions!", apiResponse: responseText });
 });
-// 根路由
+
+
 app.post("/upload", async (req, res) => {
-  const target = baseTarget + 'upload';
+  const target = baseTarget + 'files/upload';
   res.json({ message: "Hello from Express on Node Functions!" + target});
+  const { fields, files } = await parseMultipart(req);
+        const form = new FormData();
+
+        for (const key in fields) {
+          if (Array.isArray(fields[key])) {
+            fields[key].forEach(value => form.append(key, value));
+          } else {
+            form.append(key, fields[key]);
+          }
+        }
+
+        for (const key in files) {
+          const file = files[key];
+          if (Array.isArray(file)) {
+            for (const f of file) {
+              form.append(key, createReadStream(f.filepath), {
+                filename: f.originalFilename,
+                contentType: f.mimetype,
+              });
+            }
+          } else {
+            form.append(key, createReadStream(file.filepath), {
+              filename: file.originalFilename,
+              contentType: file.mimetype,
+            });
+          }
+        }
+
+        const fetchResponse = await fetch(target, {
+          method: 'POST',
+          headers: {
+            ...form.getHeaders(),
+            Authorization: `Bearer ${apiKey}`,
+          },
+          body: form,
+        });
+
+        // copyResponseHeaders(fetchResponse, res);
+
+        // const data = Buffer.from(await fetchResponse.arrayBuffer());
+        return res.status(200).json(fetchResponse);
+});
+
+app.post("/run", async (req, res) => {
+  const target = baseTarget + 'workflows/run';
+  res.json({ message: "Hello from Express on Node Functions222!" + target});
+  const rawBody = await readRawBody(req);
+
   const fetchResponse = await fetch(target, {
-  method: 'POST',
-  headers: {
-    Authorization: `Bearer ${apiKey}`,
-    // 如果需透传用户请求头，也可以在这里添加
-    }
+    method: 'POST',
+    headers: {
+      'Content-Type': contentType,
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: rawBody,
   });
-  res.json({ message: "Hello from Express on Node Functions!" + fetchResponse});
+
+        return res.status(200).json(fetchResponse);
 });
 
 
@@ -177,42 +229,42 @@ app.post("/upload", async (req, res) => {
 // });
 
 
-// // 复制 fetch 返回的响应头到 Express 响应
-// function copyResponseHeaders(fetchResponse, expressRes) {
-//   fetchResponse.headers.forEach((value, key) => {
-//     if (![
-//       'content-encoding',
-//       'transfer-encoding',
-//       'connection',
-//       'content-length'
-//     ].includes(key.toLowerCase())) {
-//       expressRes.setHeader(key, value);
-//     }
-//   });
-// }
+// 复制 fetch 返回的响应头到 Express 响应
+function copyResponseHeaders(fetchResponse, expressRes) {
+  fetchResponse.headers.forEach((value, key) => {
+    if (![
+      'content-encoding',
+      'transfer-encoding',
+      'connection',
+      'content-length'
+    ].includes(key.toLowerCase())) {
+      expressRes.setHeader(key, value);
+    }
+  });
+}
 
 
-// // formidable 解析 multipart/form-data
-// function parseMultipart(req) {
-//   return new Promise((resolve, reject) => {
-//     const form = new formidable.IncomingForm();
-//     form.parse(req, (err, fields, files) => {
-//       if (err) reject(err);
-//       else resolve({ fields, files });
-//     });
-//   });
-// }
+// formidable 解析 multipart/form-data
+function parseMultipart(req) {
+  return new Promise((resolve, reject) => {
+    const form = new formidable.IncomingForm();
+    form.parse(req, (err, fields, files) => {
+      if (err) reject(err);
+      else resolve({ fields, files });
+    });
+  });
+}
 
 
-// // 读取原始请求体
-// function readRawBody(req) {
-//   return new Promise((resolve, reject) => {
-//     const buffers = [];
-//     req.on('data', (chunk) => buffers.push(chunk));
-//     req.on('end', () => resolve(Buffer.concat(buffers)));
-//     req.on('error', reject);
-//   });
-// }
+// 读取原始请求体
+function readRawBody(req) {
+  return new Promise((resolve, reject) => {
+    const buffers = [];
+    req.on('data', (chunk) => buffers.push(chunk));
+    req.on('end', () => resolve(Buffer.concat(buffers)));
+    req.on('error', reject);
+  });
+}
 
 
 // // // 启动服务
