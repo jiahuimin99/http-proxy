@@ -39,6 +39,15 @@ export default async function handler(req, res) {
     
     // 如果路径为空或只有斜杠，说明是无效路径
     if (!apiPath || apiPath === '/' || apiPath === '') {
+        const fetchResponse = await fetch(baseTarget1, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          // 需要的话可携带客户端请求其他头
+        },
+      });
+      const data = await fetchResponse.json();
+      return res.status(200).json(data);
       return res.status(404).json({ 
         error: "路径不存在",
         message: `请求的路径 ${url} 不存在于代理服务中`,
